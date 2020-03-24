@@ -80,7 +80,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.webEngineView.urlChanged.connect(self.set_urlEdit)
         self.downButton.clicked.connect(lambda: self.downProcess(self.urlEdit.text().strip()))
         self.downAllButton.clicked.connect(self.downAllConfirm)
-        self.th_downAll.sig.connect(lambda: self.downProcess(self.urlList.pop(), True))
+        self.th_downAll.sig.connect(lambda: self.downProcess(None, True))
 
     def showStatusMsg(self, msg) :
         self.statusbar.showMessage(msg)
@@ -169,10 +169,19 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.itemList[th.thIdx].pgb.setValue(100)
         self.itemList[th.thIdx].label.setStyleSheet('color:green;')
 
-    def downProcess(self, url, counted=False) :
+    def downProcess(self, url=None, counted=False) :
+
         if self.comboBox.currentIndex() == 0 :
             QMessageBox.about(self, "파일형식선택", "파일 형식을 선택해주세요.")
             return
+
+        if url == None :
+            try :
+                url = self.urlList.pop()
+            except Exception as e :
+                print("pop() exception",e)
+                return
+
         th = Downloader(len(self.downList), url, self)
         filename = "===파일을 불러오는 중입니다.==="
         th.sig1.connect(lambda: self.setFilename(th))

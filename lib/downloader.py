@@ -19,10 +19,10 @@ class Downloader(QThread) :
         self.counted = False
 
     def setTube(self) :
-        print("setTube() - start",self.thIdx)
+        # print("setTube() - start",self.thIdx)
         self.streamIndex = self.main.comboBox.currentIndex()-1
         self.tube = pytube.YouTube(self.url)
-        print("setTube() - YouTube() ok",self.thIdx)
+        # print("setTube() - YouTube() ok",self.thIdx)
         self.tubeC = None
         if self.streamIndex == 0 :
             # print("index : ",self.streamIndex)
@@ -32,7 +32,7 @@ class Downloader(QThread) :
         else :
             # print("index : ",self.streamIndex,type(self.main.streamIndex))
             self.tubeC = self.tube.streams.filter(adaptive=True, file_extension='mp4', only_audio=True).order_by('abr').desc().first()
-        print("setTube() - streams.filter() ok",self.thIdx)
+        # print("setTube() - streams.filter() ok",self.thIdx)
         self.filename = self.tubeC.default_filename
         self.fsize = self.tubeC.filesize
         self.dir = self.main.pathEdit.text().strip()
@@ -70,8 +70,6 @@ class Downloader(QThread) :
                     print(f"파일 이름 문제 - 쓰레드{self.thIdx} YouTube() reload")
         except Exception as e :
             print(e)
-            if e == "streamingData" :
-                print("kkkkkkkkkkkk")
             print("exception - setTube() ,", self.url," idx :",self.thIdx)
             self.sig_err.emit()
             self.failed = True

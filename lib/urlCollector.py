@@ -36,11 +36,9 @@ class UrlCollector(QThread) :
             if self.main.counter > 0 :
                 self.main.counter -= 1
                 # print("self.main.counter",self.main.counter)
-                try :
-                    self.sig.emit()
-                except Exception as e :
-                    print(e)
-                    continue
+
+                self.sig.emit()
+
                 continue
             time.sleep(2)   #렉조금 줄여줌.
         self.main.showStatusMsg("")
