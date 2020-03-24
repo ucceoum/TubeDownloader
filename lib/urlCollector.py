@@ -8,7 +8,7 @@ import time
 
 
 class UrlCollector(QThread) :
-    sig = pyqtSignal(str)
+    sig = pyqtSignal()
 
     def __init__(self, parent) :
         QThread.__init__(self)
@@ -25,7 +25,7 @@ class UrlCollector(QThread) :
         self.url = self.main.urlEdit.text().strip()
 
         #pop() 뒤에서부터 ..
-        self.main.urlList = list(Playlist(self.url).video_urls) + self.main.urlList
+        self.main.urlList = list(reversed(Playlist(self.url).video_urls)) + self.main.urlList
         print("len(self.main.urlList)",len(self.main.urlList))
 
     def run(self) :
@@ -36,7 +36,11 @@ class UrlCollector(QThread) :
             if self.main.counter > 0 :
                 self.main.counter -= 1
                 # print("self.main.counter",self.main.counter)
-                self.sig.emit(self.main.urlList.pop())
+                try :
+                    self.sig.emit()
+                except Exception as e :
+                    print(e)
+                    continue
                 continue
             time.sleep(2)   #렉조금 줄여줌.
         self.main.showStatusMsg("")

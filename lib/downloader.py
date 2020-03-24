@@ -15,10 +15,14 @@ class Downloader(QThread) :
         self.main = parent
         self.progressed = 0
         self.go = True
+        self.failed = False
+        self.counted = False
 
     def setTube(self) :
+        print("setTube() - start",self.thIdx)
         self.streamIndex = self.main.comboBox.currentIndex()-1
         self.tube = pytube.YouTube(self.url)
+        print("setTube() - YouTube() ok",self.thIdx)
         self.tubeC = None
         if self.streamIndex == 0 :
             # print("index : ",self.streamIndex)
@@ -28,9 +32,11 @@ class Downloader(QThread) :
         else :
             # print("index : ",self.streamIndex,type(self.main.streamIndex))
             self.tubeC = self.tube.streams.filter(adaptive=True, file_extension='mp4', only_audio=True).order_by('abr').desc().first()
+        print("setTube() - streams.filter() ok",self.thIdx)
+        self.filename = self.tubeC.default_filename
         self.fsize = self.tubeC.filesize
         self.dir = self.main.pathEdit.text().strip()
-        self.filename = self.tubeC.default_filename
+
 
         if self.streamIndex == 2 :
             if os.path.exists(self.dir+"/"+self.filename[0:(len(self.filename)-4)]+".mp3") :
@@ -50,9 +56,11 @@ class Downloader(QThread) :
             self.sig2.emit()
 
     def downCompleted(self, stream=None, file_path=None) :
+        self.failed = False
         self.sig_comp.emit()
 
     def run(self) :
+
         try :
             for i in range(10) :
                 self.setTube()
@@ -62,28 +70,40 @@ class Downloader(QThread) :
                     print(f"파일 이름 문제 - 쓰레드{self.thIdx} YouTube() reload")
         except Exception as e :
             print(e)
-            print("exception (setTube()) ,", self.url)
+            if e == "streamingData" :
+                print("kkkkkkkkkkkk")
+            print("exception - setTube() ,", self.url," idx :",self.thIdx)
             self.sig_err.emit()
-            self.main.counter += 1
+            self.failed = True
+            if self.counted :
+                self.main.counter += 1
+                self.counted = False
             return
         # print("시작")
         try :
             if self.go :
                 self.tubeC.download(self.dir, self.filename[0:(len(self.filename)-4)], skip_existing=False)
         except Exception as e :
-            print(e)
+            print("Exception e = ",e)
+
             print("download exception")
             self.sig_err.emit()
-            self.main.counter += 1
+            self.failed = True
+            if self.counted :
+                self.main.counter += 1
+                self.counted = False
             if os.path.exists(self.dir+"/"+self.filename) :
                 os.remove(r'{}'.format((self.dir+"/"+self.filename)))
             return
 
-
+        #***
         if os.path.exists(self.dir+"/"+self.filename) or os.path.exists(self.dir+"/"+self.filename[0:(len(self.filename)-4)]+".mp3") :
             self.progressed = 100
+            self.failed = False
             self.sig2.emit()
-        self.main.counter += 1
+        if self.counted :
+            self.main.counter += 1
+            self.counted = False
 
         if not self.go :
             print("self.go = False, return")

@@ -32,9 +32,14 @@ from lib.urlCollector import UrlCollector
 #downallprocess 증발  *** pytube문제?
 #addbar clone   XXXXXXXXXXXXXX
 #다운로드 수 표시(13/100)?
-
-
-
+#실패시 파일이름 or 재시작 (urlopen 에러)
+#HTTP Error 403 : Forbidden                      (settube())
+#'streamingData' - 국가 차단?                     (settube())
+#Remote end closed connection without response   (settube())
+#get_ytplayer_config : could not find match for config_patterns (settube())
+#실패시 더블클릭하면 재시작?
+#더블클릭-멈춤(재시작 추가후)
+#counter관리 다시
 
 
 
@@ -75,7 +80,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.webEngineView.urlChanged.connect(self.set_urlEdit)
         self.downButton.clicked.connect(lambda: self.downProcess(self.urlEdit.text().strip()))
         self.downAllButton.clicked.connect(self.downAllConfirm)
-        self.th_downAll.sig.connect(self.downProcess)
+        self.th_downAll.sig.connect(lambda: self.downProcess(self.urlList.pop(), True))
 
     def showStatusMsg(self, msg) :
         self.statusbar.showMessage(msg)
@@ -123,6 +128,11 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.downPath = fpath
 
     def activateItem(self, item) :
+        if self.downList[int(item.whatsThis())].failed == True :
+            if not self.downList[int(item.whatsThis())].isRunning() :
+                self.downList[int(item.whatsThis())].start()
+            return
+
         if self.downList[int(item.whatsThis())].progressed < 100 :
             print("downloading ",self.downList[int(item.whatsThis())].progressed)
             return
@@ -152,14 +162,14 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.itemList[th.thIdx].pgb.setValue(th.progressed)
 
     def tube_err(self, th) :
-        self.itemList[th.thIdx].label.setText(f"(실패){th.filename[0:len(th.filename)-4]}")
+        self.itemList[th.thIdx].label.setText(f"(실패... 재시작 : 더블클릭){th.filename[0:len(th.filename)-4]}")
         self.itemList[th.thIdx].label.setStyleSheet('color:red;')
 
     def tube_comp(self, th) :
         self.itemList[th.thIdx].pgb.setValue(100)
         self.itemList[th.thIdx].label.setStyleSheet('color:green;')
 
-    def downProcess(self, url) :
+    def downProcess(self, url, counted=False) :
         if self.comboBox.currentIndex() == 0 :
             QMessageBox.about(self, "파일형식선택", "파일 형식을 선택해주세요.")
             return
@@ -170,6 +180,8 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         th.sig_err.connect(lambda: self.tube_err(th))
         th.sig_comp.connect(lambda: self.tube_comp(th))
         self.addDownBar(filename)
+        if counted :
+            th.counted = True
         th.start()
         self.downList.append(th)
 
