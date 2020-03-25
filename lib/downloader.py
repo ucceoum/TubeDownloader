@@ -1,7 +1,7 @@
 import pytube
 from PyQt5.QtCore import *
 import os
-
+import urllib
 class Downloader(QThread) :
     sig1 = pyqtSignal()
     sig2 = pyqtSignal()
@@ -20,11 +20,13 @@ class Downloader(QThread) :
         self.err_msg = ""
 
     def setTube(self) :
+        self.err_msg = ""
         # print("setTube() - start",self.thIdx)
+        self.tube = None
+        self.tubeC = None
         self.streamIndex = self.main.comboBox.currentIndex()-1
         self.tube = pytube.YouTube(self.url)
         # print("setTube() - YouTube() ok",self.thIdx)
-        self.tubeC = None
         if self.streamIndex == 0 :
             # print("index : ",self.streamIndex)
             self.tubeC = self.tube.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
@@ -37,7 +39,7 @@ class Downloader(QThread) :
         self.filename = self.tubeC.default_filename
         self.fsize = self.tubeC.filesize
         self.dir = self.main.pathEdit.text().strip()
-        self.tube.age_restricted
+
 
         if self.streamIndex == 2 :
             if os.path.exists(self.dir+"/"+self.filename[0:(len(self.filename)-4)]+".mp3") :
@@ -61,6 +63,12 @@ class Downloader(QThread) :
         self.err_msg = ""
         self.sig_comp.emit()
 
+
+    def counterBack(self) :
+        if self.counted :
+            self.main.counter += 1
+            self.counted = False
+
     def run(self) :
         try :
             for i in range(10) :
@@ -71,13 +79,20 @@ class Downloader(QThread) :
                     print(f"파일 이름 문제 - 쓰레드{self.thIdx} YouTube() reload")
         except Exception as e :
             print(e)
-            self.err_msg = "Error"
+            print("e type",type(e))
+            if type(e) == pytube.exceptions.RegexMatchError :
+                self.err_msg = "영상을 찾을 수 없습니다."
+            elif type(e) == KeyError :
+                self.err_msg = "차단된 영상이거나 Live"
+            elif type(e) == urllib.error.URLError :
+                self.err_msg = "로딩 오류, 재시작 : 더블클릭"
+            else :
+                self.err_msg = "로딩 오류, 재시작 : 더블클릭"
+        if self.err_msg != "" :
             print("exception - setTube() ,", self.url," idx :",self.thIdx)
             self.sig_err.emit()
             self.failed = True
-            if self.counted :
-                self.main.counter += 1
-                self.counted = False
+            self.counterBack()
             return
         # print("시작")
         try :
@@ -87,12 +102,10 @@ class Downloader(QThread) :
             print("Exception e = ",e)
 
             print("download exception")
-            self.err_msg = "Download Error"
+            self.err_msg = "다운로드 오류"
             self.sig_err.emit()
             self.failed = True
-            if self.counted :
-                self.main.counter += 1
-                self.counted = False
+            self.counterBack()
             if os.path.exists(self.dir+"/"+self.filename) :
                 os.remove(r'{}'.format((self.dir+"/"+self.filename)))
             return
@@ -103,9 +116,7 @@ class Downloader(QThread) :
             self.failed = False
             self.err_msg = ""
             self.sig2.emit()
-        if self.counted :
-            self.main.counter += 1
-            self.counted = False
+        self.counterBack()
 
         if not self.go :
             print("self.go = False, return")

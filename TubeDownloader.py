@@ -26,7 +26,7 @@ from lib.urlCollector import UrlCollector
 #urlopen error [WinError 10060] 연결된 구성원으로부터 응답이 없어 연결하지 못했거나, 호스트로부터 응답이 없어 연결이 끊어졌습니다.
 #statusmessage
 #import 정리
-#addbar thread?(렉)
+#addbar clone+thread?(렉)
 #mp3변환시 다른프로세스가 사용중.. ***?
 #url - 페이지 - 버튼
 #downallprocess 증발  *** pytube문제?
@@ -39,9 +39,11 @@ from lib.urlCollector import UrlCollector
 #get_ytplayer_config : could not find match for config_patterns (settube())
 #더블클릭-멈춤(재시작 추가후)
 #counter관리 다시   ***
-
-#Exception
+#응답없음 - cmd창 눌러주니 다시됨....(뭔지모름) - 조건 : cmd블럭후 activateitem
+#YouTube 재로딩 안됨(counter손실) 응답없음 됏을때만?
+#Exception ***
 #'formats' : livestream
+
 
 
 class TubeMain(QMainWindow, Ui_MainWindow) :
@@ -163,7 +165,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.itemList[th.thIdx].pgb.setValue(th.progressed)
 
     def tube_err(self, th) :
-        self.itemList[th.thIdx].label.setText(f"({th.err_msg} 재시작 : 더블클릭){th.filename[0:len(th.filename)-4]}")
+        self.itemList[th.thIdx].label.setText(f"({th.err_msg}){th.filename[0:len(th.filename)-4]}")
         self.itemList[th.thIdx].label.setStyleSheet('color:red;')
 
     def tube_comp(self, th) :
