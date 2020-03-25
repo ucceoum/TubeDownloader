@@ -130,8 +130,8 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
     def activateItem(self, item) :
         if self.downList[int(item.whatsThis())].failed == True :
             if not self.downList[int(item.whatsThis())].isRunning() :
-                self.downList[int(item.whatsThis())].start()
                 self.downList[int(item.whatsThis())].counted=False
+                self.downList[int(item.whatsThis())].start()
             return
 
         if self.downList[int(item.whatsThis())].progressed < 100 :
