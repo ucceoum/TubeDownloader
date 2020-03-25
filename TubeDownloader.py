@@ -39,7 +39,7 @@ from lib.urlCollector import UrlCollector
 #get_ytplayer_config : could not find match for config_patterns (settube())
 #실패시 더블클릭하면 재시작?
 #더블클릭-멈춤(재시작 추가후)
-#counter관리 다시
+#counter관리 다시   ***
 
 
 
@@ -131,6 +131,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         if self.downList[int(item.whatsThis())].failed == True :
             if not self.downList[int(item.whatsThis())].isRunning() :
                 self.downList[int(item.whatsThis())].start()
+                self.downList[int(item.whatsThis())].counted=False
             return
 
         if self.downList[int(item.whatsThis())].progressed < 100 :

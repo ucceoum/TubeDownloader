@@ -60,7 +60,6 @@ class Downloader(QThread) :
         self.sig_comp.emit()
 
     def run(self) :
-
         try :
             for i in range(10) :
                 self.setTube()
