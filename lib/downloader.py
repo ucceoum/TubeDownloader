@@ -17,6 +17,7 @@ class Downloader(QThread) :
         self.go = True
         self.failed = False
         self.counted = False
+        self.err_msg = ""
 
     def setTube(self) :
         # print("setTube() - start",self.thIdx)
@@ -36,7 +37,7 @@ class Downloader(QThread) :
         self.filename = self.tubeC.default_filename
         self.fsize = self.tubeC.filesize
         self.dir = self.main.pathEdit.text().strip()
-
+        self.tube.age_restricted
 
         if self.streamIndex == 2 :
             if os.path.exists(self.dir+"/"+self.filename[0:(len(self.filename)-4)]+".mp3") :
@@ -57,6 +58,7 @@ class Downloader(QThread) :
 
     def downCompleted(self, stream=None, file_path=None) :
         self.failed = False
+        self.err_msg = ""
         self.sig_comp.emit()
 
     def run(self) :
@@ -69,6 +71,7 @@ class Downloader(QThread) :
                     print(f"파일 이름 문제 - 쓰레드{self.thIdx} YouTube() reload")
         except Exception as e :
             print(e)
+            self.err_msg = "Error"
             print("exception - setTube() ,", self.url," idx :",self.thIdx)
             self.sig_err.emit()
             self.failed = True
@@ -84,6 +87,7 @@ class Downloader(QThread) :
             print("Exception e = ",e)
 
             print("download exception")
+            self.err_msg = "Download Error"
             self.sig_err.emit()
             self.failed = True
             if self.counted :
@@ -97,6 +101,7 @@ class Downloader(QThread) :
         if os.path.exists(self.dir+"/"+self.filename) or os.path.exists(self.dir+"/"+self.filename[0:(len(self.filename)-4)]+".mp3") :
             self.progressed = 100
             self.failed = False
+            self.err_msg = ""
             self.sig2.emit()
         if self.counted :
             self.main.counter += 1

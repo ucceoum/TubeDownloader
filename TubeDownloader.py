@@ -40,7 +40,8 @@ from lib.urlCollector import UrlCollector
 #더블클릭-멈춤(재시작 추가후)
 #counter관리 다시   ***
 
-
+#Exception
+#'formats' : livestream
 
 
 class TubeMain(QMainWindow, Ui_MainWindow) :
@@ -129,8 +130,8 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
     def activateItem(self, item) :
         if self.downList[int(item.whatsThis())].failed == True :
             if not self.downList[int(item.whatsThis())].isRunning() :
-                self.downList[int(item.whatsThis())].start()
                 self.downList[int(item.whatsThis())].counted=False
+                self.downList[int(item.whatsThis())].start()
             return
 
         if self.downList[int(item.whatsThis())].progressed < 100 :
@@ -162,7 +163,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.itemList[th.thIdx].pgb.setValue(th.progressed)
 
     def tube_err(self, th) :
-        self.itemList[th.thIdx].label.setText(f"(실패... 재시작 : 더블클릭){th.filename[0:len(th.filename)-4]}")
+        self.itemList[th.thIdx].label.setText(f"({th.err_msg} 재시작 : 더블클릭){th.filename[0:len(th.filename)-4]}")
         self.itemList[th.thIdx].label.setStyleSheet('color:red;')
 
     def tube_comp(self, th) :
