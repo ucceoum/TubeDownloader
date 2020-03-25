@@ -37,7 +37,6 @@ from lib.urlCollector import UrlCollector
 #'streamingData' - 국가 차단?                     (settube())
 #Remote end closed connection without response   (settube())
 #get_ytplayer_config : could not find match for config_patterns (settube())
-#실패시 더블클릭하면 재시작?
 #더블클릭-멈춤(재시작 추가후)
 #counter관리 다시   ***
 
