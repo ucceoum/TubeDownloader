@@ -43,10 +43,12 @@ from lib.urlCollector import UrlCollector
 #YouTube 재로딩 안됨(counter손실) 응답없음 됏을때만?
 #Exception ***
 #'formats' : livestream
+#실패한거 맨위로 올리기?
 
 
 
 class TubeMain(QMainWindow, Ui_MainWindow) :
+    sig_title = pyqtSignal()
     def __init__(self) :
         super().__init__()
         self.downList = []
@@ -59,7 +61,8 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.urlList = []
         self.trashList = []
         self.counter = 10   #동시 다운로드 수
-        # self.total = 0
+        self.total = 0
+        self.comp = 0
         self.defaultDownPath = str(os.getcwd()).replace("\\","/")+"/downloads"
         self.comboBox.addItem("select one")
         self.comboBox.addItem("720p↓  /mp4")
@@ -68,6 +71,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.pathEdit.setText(self.defaultDownPath)
         self.th_downAll = UrlCollector(self)
         self.initSignal()
+
 
     def initSignal(self) :
         self.homeButton.clicked.connect(self.go_home)
@@ -83,6 +87,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.downButton.clicked.connect(lambda: self.downProcess(self.urlEdit.text().strip()))
         self.downAllButton.clicked.connect(self.downAllConfirm)
         self.th_downAll.sig.connect(lambda: self.downProcess(None, True))
+        self.sig_title.connect(self.setTitle)
 
     def showStatusMsg(self, msg) :
         self.statusbar.showMessage(msg)
@@ -120,6 +125,9 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
     def go_next(self) :
         # print("go_next")
         self.webEngineView.forward()
+
+    def setTitle(self) :
+        self.setWindowTitle("Tube Downloader "+f'[{self.comp}/{self.total}]')
 
 
     def setDownPath(self) :
@@ -171,6 +179,8 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
     def tube_comp(self, th) :
         self.itemList[th.thIdx].pgb.setValue(100)
         self.itemList[th.thIdx].label.setStyleSheet('color:green;')
+        self.comp += 1
+        self.sig_title.emit()
 
     def downProcess(self, url=None, counted=False) :
 
@@ -184,6 +194,9 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
             except Exception as e :
                 print("pop() exception",e)
                 return
+        else :
+            self.total += 1
+            self.sig_title.emit()
 
         th = Downloader(len(self.downList), url, self)
         filename = "===파일을 불러오는 중입니다.==="
