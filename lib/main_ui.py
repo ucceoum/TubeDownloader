@@ -45,11 +45,11 @@ class Ui_MainWindow(object):
         self.comboBox.setGeometry(QtCore.QRect(0, 525, 200, 22))
         self.comboBox.setObjectName("comboBox")
         self.pathEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.pathEdit.setGeometry(QtCore.QRect(200, 525, 300, 22))
+        self.pathEdit.setGeometry(QtCore.QRect(200, 525, 270, 22))
         self.pathEdit.setReadOnly(True)
         self.pathEdit.setObjectName("pathEdit")
         self.toolButton = QtWidgets.QToolButton(self.centralwidget)
-        self.toolButton.setGeometry(QtCore.QRect(499, 524, 52, 24))
+        self.toolButton.setGeometry(QtCore.QRect(469, 524, 32, 24))
         self.toolButton.setObjectName("toolButton")
         self.downButton = QtWidgets.QPushButton(self.centralwidget)
         self.downButton.setGeometry(QtCore.QRect(449, -1, 52, 25))
@@ -61,6 +61,9 @@ class Ui_MainWindow(object):
         self.listWidget.setGeometry(QtCore.QRect(0, 546, 551, 134))
         self.listWidget.setDragEnabled(True)
         self.listWidget.setObjectName("listWidget")
+        self.clrButton = QtWidgets.QPushButton(self.centralwidget)
+        self.clrButton.setGeometry(QtCore.QRect(499, 524, 52, 24))
+        self.clrButton.setObjectName("clrButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -71,6 +74,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Tube Downloader"))
@@ -80,6 +84,7 @@ class Ui_MainWindow(object):
         self.goButton.setText(_translate("MainWindow", "GO"))
         self.toolButton.setText(_translate("MainWindow", "..."))
         self.downButton.setText(_translate("MainWindow", "↓"))
+        self.clrButton.setText(_translate("MainWindow", "clear"))
         self.downAllButton.setText(_translate("MainWindow", "↓+"))
 
 from PyQt5 import QtWebEngineWidgets

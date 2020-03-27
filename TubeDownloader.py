@@ -86,6 +86,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.webEngineView.urlChanged.connect(self.set_urlEdit)
         self.downButton.clicked.connect(lambda: self.downProcess(self.urlEdit.text().strip()))
         self.downAllButton.clicked.connect(self.downAllConfirm)
+        self.clrButton.clicked.connect(self.clear)
         self.th_downAll.sig.connect(lambda: self.downProcess(None, True))
         self.sig_title.connect(self.setTitle)
 
@@ -157,6 +158,13 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
     def cancelB(self, idx) :
         self.downList[int(idx)].go = False
         self.itemList2[int(idx)].setHidden(True)
+
+    def clear(self) :
+        for i in range(len(self.downList)) :
+            if self.downList[i].progressed >= 100 :
+                self.itemList2[i].setHidden(True)
+
+
 
     def setFilename(self, th) :
         if th.streamIndex == 2 :
