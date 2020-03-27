@@ -25,9 +25,10 @@ class UrlCollector(QThread) :
         self.url = self.main.urlEdit.text().strip()
 
         #pop() 뒤에서부터 ..
-        self.main.urlList = list(reversed(Playlist(self.url).video_urls)) + self.main.urlList
+        plist = list(reversed(Playlist(self.url).video_urls))
+        self.main.urlList = plist + self.main.urlList
         print("len(self.main.urlList)",len(self.main.urlList))
-        self.main.total += len(self.main.urlList)
+        self.main.total += len(plist)
         self.main.sig_title.emit()
 
     def run(self) :
