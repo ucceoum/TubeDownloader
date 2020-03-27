@@ -1,21 +1,15 @@
 import sys
 import os
-from PyQt5.QtWidgets import *
-from PyQt5 import *
-# from PyQt5.QtCore import pyqtSlot, pyqtSignal, QUrl
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QFileDialog, QListWidgetItem
+from PyQt5.QtCore import pyqtSlot, pyqtSignal, QUrl, QThread
+from threading import Thread
 
 from lib.main_ui import Ui_MainWindow
 from lib.downConfirm import DownConfirm
-import pytube
-from threading import Thread
-from PyQt5.QtCore import *
-
 from lib.downloader import Downloader
 from lib.item import Item
 from lib.urlCollector import UrlCollector
-
-
-
 
 #https://doc.qt.io/archives/qt-4.8/qtgui-module.html
 #https://doc.qt.io/qt-5/qthread.html
@@ -24,10 +18,9 @@ from lib.urlCollector import UrlCollector
 
 #구독채널 downAll?
 #statusmessage
-#import 정리
 #addbar clone+thread?(렉)
 #url - 페이지 - 버튼
-#downallprocess 증발  *** pytube문제?
+#downallprocess 증발  *** Playlist 다 못불러오는 현상
 #addbar clone   XXXXXXXXXXXXXX
 
 

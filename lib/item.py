@@ -1,7 +1,7 @@
 
-from PyQt5 import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QWidget,QBoxLayout,QProgressBar,QLabel,QPushButton
+from PyQt5.QtCore import Qt, QMargins
 
 class Item(QWidget):
     def __init__(self, filename):

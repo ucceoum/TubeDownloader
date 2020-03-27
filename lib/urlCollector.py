@@ -1,4 +1,4 @@
-from PyQt5.QtCore import *
+from PyQt5.QtCore import QThread, pyqtSignal
 from pytube import Playlist
 import time
 

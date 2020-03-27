@@ -1,5 +1,5 @@
 import pytube
-from PyQt5.QtCore import *
+from PyQt5.QtCore import QThread, pyqtSignal
 import os
 import urllib
 class Downloader(QThread) :
@@ -78,7 +78,7 @@ class Downloader(QThread) :
             if type(e) == pytube.exceptions.RegexMatchError :
                 self.err_msg = "영상을 찾을 수 없습니다."
             elif type(e) == KeyError :
-                self.err_msg = "차단된 영상이거나 Live"
+                self.err_msg = "차단된 영상이거나 Live 영상입니다."
             elif type(e) == urllib.error.URLError :
                 self.err_msg = "URL로딩 오류, 재시작 : 더블클릭"
             else :
