@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'downconfirm.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class DownConfirm(object):
@@ -41,13 +33,3 @@ class DownConfirm(object):
         self.label_2.setText(_translate("Dialog", "재생목록의 동영상을 모두 \n다운로드 하시겠습니까?"))
         self.yesButton.setText(_translate("Dialog", "네"))
         self.noButton.setText(_translate("Dialog", "아니오"))
-
-
-# if __name__ == "__main__":
-#     import sys
-#     app = QtWidgets.QApplication(sys.argv)
-#     Dialog = QtWidgets.QDialog()
-#     dc = DownConfirm()
-#     dc.setupUi(Dialog)
-#     Dialog.exec_()
-#     sys.exit(app.exec_())

@@ -21,21 +21,17 @@ class Downloader(QThread) :
 
     def setTube(self) :
         self.err_msg = ""
-        # print("setTube() - start",self.thIdx)
         self.tube = None
         self.tubeC = None
         self.streamIndex = self.main.comboBox.currentIndex()-1
         self.tube = pytube.YouTube(self.url)
-        # print("setTube() - YouTube() ok",self.thIdx)
         if self.streamIndex == 0 :
-            # print("index : ",self.streamIndex)
             self.tubeC = self.tube.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
         elif self.streamIndex == 1 :
             self.tubeC = self.tube.streams.filter(adaptive=True, file_extension='mp4', only_video=True).order_by('resolution').desc().first()
         else :
-            # print("index : ",self.streamIndex,type(self.main.streamIndex))
             self.tubeC = self.tube.streams.filter(adaptive=True, file_extension='mp4', only_audio=True).order_by('abr').desc().first()
-        # print("setTube() - streams.filter() ok",self.thIdx)
+
         self.filename = self.tubeC.default_filename
         self.fsize = self.tubeC.filesize
         self.dir = self.main.pathEdit.text().strip()
@@ -54,7 +50,6 @@ class Downloader(QThread) :
         prog = int(((self.fsize - bytes_remaining)/self.fsize)*100)
 
         if prog > self.progressed :
-            # print(prog)
             self.progressed = prog
             self.sig2.emit()
 
@@ -85,7 +80,7 @@ class Downloader(QThread) :
             elif type(e) == KeyError :
                 self.err_msg = "차단된 영상이거나 Live"
             elif type(e) == urllib.error.URLError :
-                self.err_msg = "로딩 오류, 재시작 : 더블클릭"
+                self.err_msg = "URL로딩 오류, 재시작 : 더블클릭"
             else :
                 self.err_msg = "로딩 오류, 재시작 : 더블클릭"
         if self.err_msg != "" :
@@ -94,7 +89,7 @@ class Downloader(QThread) :
             self.failed = True
             self.counterBack()
             return
-        # print("시작")
+
         try :
             if self.go :
                 self.tubeC.download(self.dir, self.filename[0:(len(self.filename)-4)], skip_existing=False)
@@ -129,18 +124,11 @@ class Downloader(QThread) :
             return
 
         if self.streamIndex == 2 :
-            # print("path- mp3")
             file = self.dir+"/"+self.filename
             fileC = os.path.splitext(self.dir+"/"+self.filename)
-            # print(self.dir+"/"+self.filename)
-            # print(file)
-            # print(fileC)
             try :
                 os.rename(file.replace("/","\\"), fileC[0][:len(fileC[0])-7] + '.mp3' )
-                pass
             except Exception as e :
                 print(e)
                 print("mp3 path exception")
-                pass
             self.filename = self.filename[0:len(self.filename)-11] + '.mp3'
-        # print("완료")

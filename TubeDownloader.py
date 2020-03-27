@@ -21,30 +21,14 @@ from lib.urlCollector import UrlCollector
 #https://doc.qt.io/qt-5/qthread.html
 #https://python-pytube.readthedocs.io/en/latest/api.html
 #https://www.riverbankcomputing.com/static/Docs/PyQt5/api/qtcore/qtcore-module.html
-#내 재생목록+관련 재생목록
+
 #구독채널 downAll?
-#urlopen error [WinError 10060] 연결된 구성원으로부터 응답이 없어 연결하지 못했거나, 호스트로부터 응답이 없어 연결이 끊어졌습니다.
 #statusmessage
 #import 정리
 #addbar clone+thread?(렉)
-#mp3변환시 다른프로세스가 사용중.. ***?
 #url - 페이지 - 버튼
 #downallprocess 증발  *** pytube문제?
 #addbar clone   XXXXXXXXXXXXXX
-#다운로드 수 표시(13/100)?
-#실패시 파일이름 or 재시작 (urlopen 에러)
-#HTTP Error 403 : Forbidden                      (settube())
-#'streamingData' - 국가 차단?                     (settube())
-#Remote end closed connection without response   (settube())
-#get_ytplayer_config : could not find match for config_patterns (settube())
-#더블클릭-멈춤(재시작 추가후)
-#counter관리 다시   ***
-#응답없음 - cmd창 눌러주니 다시됨....(뭔지모름) - 조건 : cmd블럭후 activateitem
-#YouTube 재로딩 안됨(counter손실) 응답없음 됏을때만?
-#Exception ***
-#'formats' : livestream
-#실패한거 맨위로 올리기?
-
 
 
 class TubeMain(QMainWindow, Ui_MainWindow) :
@@ -116,20 +100,16 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
 
     @pyqtSlot()
     def go_home(self) :
-        # print("go_home")
         self.go_URL(self.homeURL)
 
     def go_prev(self) :
-        # print("go_prev")
         self.webEngineView.back()
 
     def go_next(self) :
-        # print("go_next")
         self.webEngineView.forward()
 
     def setTitle(self) :
         self.setWindowTitle("Tube Downloader "+f'[{self.comp}/{self.total}]')
-
 
     def setDownPath(self) :
         fpath = QFileDialog.getExistingDirectory(self, 'Select Directory')
@@ -164,8 +144,6 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
             if self.downList[i].progressed >= 100 :
                 self.itemList2[i].setHidden(True)
 
-
-
     def setFilename(self, th) :
         if th.streamIndex == 2 :
             if th.filename.endswith("(audio).mp3"):
@@ -191,11 +169,9 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.sig_title.emit()
 
     def downProcess(self, url=None, counted=False) :
-
         if self.comboBox.currentIndex() == 0 :
             QMessageBox.about(self, "파일형식선택", "파일 형식을 선택해주세요.")
             return
-
         if url == None :
             try :
                 url = self.urlList.pop()
@@ -205,7 +181,6 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         else :
             self.total += 1
             self.sig_title.emit()
-
         th = Downloader(len(self.downList), url, self)
         filename = "===파일을 불러오는 중입니다.==="
         th.sig1.connect(lambda: self.setFilename(th))
@@ -230,7 +205,6 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
             self.downAllProcess()
 
     def downAllProcess(self) :
-        # print("downallprocess",self.urlEdit.text().strip())
         self.showStatusMsg("재생목록을 불러오는 중입니다.")
         if self.th_downAll.isRunning() :
             tmpTh = Thread(target=self.th_downAll.urlCollect)
@@ -241,12 +215,10 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
 
     def downAllProcess_2(self) :
         self.showStatusMsg("")
-        # print("downallprocess2")
         for i in range(len(self.urlList)) :
             self.downProcess(self.urlList[i])
 
     def addDownBar(self, filename) :
-        # print("addbar --")
         item = QListWidgetItem(self.listWidget)
         tem1 = Item(filename)
         item.setWhatsThis(str(len(self.itemList)))
