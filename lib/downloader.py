@@ -1,7 +1,8 @@
 import pytube
 from PyQt5.QtCore import QThread, pyqtSignal
 import os
-import urllib
+# import urllib
+from urllib import error
 class Downloader(QThread) :
     sig1 = pyqtSignal()
     sig2 = pyqtSignal()
@@ -79,7 +80,7 @@ class Downloader(QThread) :
                 self.err_msg = "영상을 찾을 수 없습니다."
             elif type(e) == KeyError :
                 self.err_msg = "차단된 영상이거나 Live 영상입니다."
-            elif type(e) == urllib.error.URLError :
+            elif type(e) == error.URLError :
                 self.err_msg = "URL로딩 오류, 재시작 : 더블클릭"
             else :
                 self.err_msg = "로딩 오류, 재시작 : 더블클릭"

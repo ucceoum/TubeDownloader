@@ -1,7 +1,7 @@
 import sys
 import os
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QFileDialog, QListWidgetItem
+# from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QFileDialog, QListWidgetItem, QDialog
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QUrl, QThread
 from threading import Thread
 
@@ -117,6 +117,9 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.setWindowTitle("Tube Downloader "+f'[{self.comp}/{self.total}]')
 
     def setDownPath(self) :
+        if self.th_downAll.isRunning() :
+            QMessageBox.about(self, "알림", "다운로드 진행 중에는 저장경로를 바꿀 수 없습니다.")
+            return
         fpath = QFileDialog.getExistingDirectory(self, 'Select Directory')
         if fpath == "" :
             fpath = self.defaultDownPath
@@ -206,7 +209,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         if self.comboBox.currentIndex() == 0 :
             QMessageBox.about(self, "파일형식선택", "파일 형식을 선택해주세요.")
             return
-        Dialog = QtWidgets.QDialog()
+        Dialog = QDialog()
         dc = DownConfirm()
         dc.setupUi(Dialog)
         Dialog.exec_()

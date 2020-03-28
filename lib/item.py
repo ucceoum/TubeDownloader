@@ -1,5 +1,5 @@
 
-from PyQt5 import QtWidgets
+# from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget,QBoxLayout,QProgressBar,QLabel,QPushButton
 from PyQt5.QtCore import Qt, QMargins
 
@@ -8,11 +8,11 @@ class Item(QWidget):
         QWidget.__init__(self, flags=Qt.Widget)
         self.layout = QBoxLayout(QBoxLayout.LeftToRight)
         self.layout.setContentsMargins(QMargins())
-        self.pgb = QtWidgets.QProgressBar(self)
+        self.pgb = QProgressBar(self)
         self.pgb.setProperty("value", 0)
         self.pgb.setTextVisible(False)
         self.pgb.setObjectName("pgb")
-        self.label = QtWidgets.QLabel(self)
+        self.label = QLabel(self)
         self.label.setMinimumSize(300,30)
         self.label.setObjectName("label")
         self.label.setMaximumSize(300,30)
