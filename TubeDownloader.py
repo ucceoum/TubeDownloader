@@ -11,6 +11,7 @@ from lib.downloader import Downloader
 from lib.item import Item
 from lib.urlCollector import UrlCollector
 
+import time
 #https://doc.qt.io/archives/qt-4.8/qtgui-module.html
 #https://doc.qt.io/qt-5/qthread.html
 #https://python-pytube.readthedocs.io/en/latest/api.html
@@ -25,7 +26,15 @@ from lib.urlCollector import UrlCollector
 #url - 페이지 - 버튼
 #downallprocess 증발  *** Playlist 다 못불러오는 현상
 #addbar clone   XXXXXXXXXXXXXX
+#downall 중 select 바꿀때
 
+
+def check(func) :
+    def check_time(*args, **kwargs) :
+        start = time.time()
+        func(*args, **kwargs)
+        print(f'{func.__name__} ---- {time.time()-start}')
+    return check_time
 
 class TubeMain(QMainWindow, Ui_MainWindow) :
     sig_title = pyqtSignal()
@@ -163,7 +172,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.itemList[th.thIdx].label.setStyleSheet('color:green;')
         self.comp += 1
         self.sig_title.emit()
-
+    @check
     def downProcess(self, url=None, counted=False) :
         if self.comboBox.currentIndex() == 0 :
             QMessageBox.about(self, "파일형식선택", "파일 형식을 선택해주세요.")
@@ -200,6 +209,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         if dc.confirmed :
             self.downAllProcess()
 
+    @check
     def downAllProcess(self) :
         self.showStatusMsg("재생목록을 불러오는 중입니다.")
         if self.th_downAll.isRunning() :
@@ -213,7 +223,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.showStatusMsg("")
         for i in range(len(self.urlList)) :
             self.downProcess(self.urlList[i])
-
+    @check
     def addDownBar(self, filename) :
         item = QListWidgetItem(self.listWidget)
         tem1 = Item(filename)
