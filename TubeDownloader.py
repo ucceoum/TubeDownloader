@@ -18,15 +18,14 @@ import time
 #https://www.riverbankcomputing.com/static/Docs/PyQt5/api/qtcore/qtcore-module.html
 
 #https://www.youtube.com/watch?v=9EZvO5TviAM&list=UUd6MoB9NC6uYN2grvUNT-Zg&index=80
-
+#https://www.youtube.com/watch?v=kJQP7kiw5Fk&list=PLPzYcyenAQYG6aMX0nPhhHoj9yD_P6TQb
 
 #구독채널 downAll?
 #statusmessage
 #addbar clone+thread?(렉)
 #url - 페이지 - 버튼
 #downallprocess 증발  *** Playlist 다 못불러오는 현상
-#addbar clone   XXXXXXXXXXXXXX
-#downall 중 select 바꿀때
+
 
 
 def check(func) :
@@ -49,7 +48,9 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.itemList2 = []
         self.urlList = []
         self.trashList = []
-        self.counter = 10   #동시 다운로드 수
+        self.streamIndexList = []
+        self.urlCheck = 0
+        self.counter = 5   #동시 다운로드 수
         self.total = 0
         self.comp = 0
         self.defaultDownPath = str(os.getcwd()).replace("\\","/")+"/downloads"
@@ -103,7 +104,6 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
     def showStatusMsg(self, msg) :
         self.statusbar.showMessage(msg)
 
-    @pyqtSlot()
     def go_home(self) :
         self.go_URL(self.homeURL)
 
@@ -172,21 +172,25 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.itemList[th.thIdx].label.setStyleSheet('color:green;')
         self.comp += 1
         self.sig_title.emit()
+
     @check
     def downProcess(self, url=None, counted=False) :
-        if self.comboBox.currentIndex() == 0 :
-            QMessageBox.about(self, "파일형식선택", "파일 형식을 선택해주세요.")
-            return
+        streamIndex = 0
         if url == None :
-            try :
-                url = self.urlList.pop()
-            except Exception as e :
-                print("pop() exception",e)
+            if len(self.urlList) > self.urlCheck :
+                url = self.urlList[self.urlCheck]
+                streamIndex = self.streamIndexList[self.urlCheck]
+                self.urlCheck += 1
+            else :
                 return
         else :
+            if self.comboBox.currentIndex() == 0 :
+                QMessageBox.about(self, "파일형식선택", "파일 형식을 선택해주세요.")
+                return
+            streamIndex = self.comboBox.currentIndex()
             self.total += 1
             self.sig_title.emit()
-        th = Downloader(len(self.downList), url, self)
+        th = Downloader(self, len(self.downList), url, streamIndex)
         filename = "===파일을 불러오는 중입니다.==="
         th.sig1.connect(lambda: self.setFilename(th))
         th.sig2.connect(lambda: self.setProgressBar(th))
@@ -209,7 +213,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         if dc.confirmed :
             self.downAllProcess()
 
-    @check
+    # @check
     def downAllProcess(self) :
         self.showStatusMsg("재생목록을 불러오는 중입니다.")
         if self.th_downAll.isRunning() :
@@ -223,7 +227,7 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.showStatusMsg("")
         for i in range(len(self.urlList)) :
             self.downProcess(self.urlList[i])
-    @check
+    # @check
     def addDownBar(self, filename) :
         item = QListWidgetItem(self.listWidget)
         tem1 = Item(filename)

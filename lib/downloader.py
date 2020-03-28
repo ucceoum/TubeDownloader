@@ -7,7 +7,7 @@ class Downloader(QThread) :
     sig2 = pyqtSignal()
     sig_err = pyqtSignal()
     sig_comp = pyqtSignal()
-    def __init__(self, idx, url, parent) :
+    def __init__(self, parent, idx, url, streamIndex) :
         QThread.__init__(self)
         self.url = url
         self.thIdx = idx
@@ -18,12 +18,12 @@ class Downloader(QThread) :
         self.failed = False
         self.counted = False
         self.err_msg = ""
+        self.streamIndex = streamIndex-1
 
     def setTube(self) :
         self.err_msg = ""
         self.tube = None
         self.tubeC = None
-        self.streamIndex = self.main.comboBox.currentIndex()-1
         self.tube = pytube.YouTube(self.url)
         if self.streamIndex == 0 :
             self.tubeC = self.tube.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()

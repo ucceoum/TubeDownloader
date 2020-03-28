@@ -12,16 +12,18 @@ class UrlCollector(QThread) :
         self.main = parent
 
     def urlCollect(self) :
+        tmp_streamIndex = self.main.comboBox.currentIndex()
         self.url = self.main.urlEdit.text().strip()
-        plist = list(reversed(Playlist(self.url).video_urls))
-        self.main.urlList = plist + self.main.urlList
-        print("len(self.main.urlList)",len(self.main.urlList))
+        plist = Playlist(self.url).video_urls
+        tmp_streamIndexList = [tmp_streamIndex for _ in range(len(plist))]
+        self.main.urlList += plist
+        self.main.streamIndexList += tmp_streamIndexList
         self.main.total += len(plist)
         self.main.sig_title.emit()
 
     def run(self) :
         self.urlCollect()
-        while len(self.main.urlList) > 0 :
+        while len(self.main.urlList) > self.main.urlCheck :
             if self.main.counter > 0 :
                 self.main.counter -= 1
                 self.sig.emit()
