@@ -16,6 +16,9 @@ from lib.urlCollector import UrlCollector
 #https://python-pytube.readthedocs.io/en/latest/api.html
 #https://www.riverbankcomputing.com/static/Docs/PyQt5/api/qtcore/qtcore-module.html
 
+#https://www.youtube.com/watch?v=9EZvO5TviAM&list=UUd6MoB9NC6uYN2grvUNT-Zg&index=80
+
+
 #구독채널 downAll?
 #statusmessage
 #addbar clone+thread?(렉)
