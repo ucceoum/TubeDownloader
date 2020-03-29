@@ -1,6 +1,5 @@
 import sys
 import os
-# from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QFileDialog, QListWidgetItem, QDialog
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QUrl, QThread
 from threading import Thread

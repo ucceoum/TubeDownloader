@@ -1,7 +1,6 @@
 import pytube
 from PyQt5.QtCore import QThread, pyqtSignal
 import os
-# import urllib
 from urllib import error
 class Downloader(QThread) :
     sig1 = pyqtSignal()

@@ -1,8 +1,6 @@
-# from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QSize, QRect, QUrl, QMetaObject, QCoreApplication
 from PyQt5.QtGui import QIcon, QPixmap, QIcon
 from PyQt5.QtWidgets import QSizePolicy, QWidget, QPushButton, QLineEdit, QComboBox, QToolButton, QStatusBar, QListWidget
-# from PyQt5 import QtWebEngineWidgets
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):

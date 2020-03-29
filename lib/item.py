@@ -1,5 +1,3 @@
-
-# from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget,QBoxLayout,QProgressBar,QLabel,QPushButton
 from PyQt5.QtCore import Qt, QMargins
 
