@@ -6,3 +6,4 @@ aa.py
 build/*
 dist/*
 *.spec
+*.exe
