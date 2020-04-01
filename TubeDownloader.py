@@ -22,7 +22,6 @@ import time
 #구독채널 downAll?
 #statusmessage
 #addbar clone+thread?(렉)
-#url - 페이지 - 버튼
 #downallprocess 증발  *** Playlist 다 못불러오는 현상
 
 
@@ -78,6 +77,8 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
         self.clrButton.clicked.connect(self.clear)
         self.th_downAll.sig.connect(lambda: self.downProcess(None, True))
         self.sig_title.connect(self.setTitle)
+        self.urlEdit.textChanged.connect(self.setButtonEA)
+
 
     def showStatusMsg(self, msg) :
         self.statusbar.showMessage(msg)
@@ -90,12 +91,13 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
     def set_urlEdit(self) :
         self.showStatusMsg("")
         self.urlEdit.setText(self.webEngineView.url().toString())
-        if self.urlEdit.text().strip().startswith("https://www.youtube.com/watch") :
+
+    def setButtonEA(self, url) :
+        if url.strip().startswith("https://www.youtube.com/watch") :
             self.downButton.setEnabled(True)
         else :
             self.downButton.setEnabled(False)
-
-        if self.urlEdit.text().strip().startswith("https://www.youtube.com/playlist?list") or self.urlEdit.text().strip().find("&list=") >= 0:
+        if url.strip().startswith("https://www.youtube.com/playlist?list") or url.strip().find("&list=") >= 0:
             self.downAllButton.setEnabled(True)
         else :
             self.downAllButton.setEnabled(False)
