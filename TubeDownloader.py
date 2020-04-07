@@ -227,10 +227,11 @@ class TubeMain(QMainWindow, Ui_MainWindow) :
             return
         self.th_downAll.start()
 
-    def downAllProcess_2(self) :
-        self.showStatusMsg("")
-        for i in range(len(self.urlList)) :
-            self.downProcess(self.urlList[i])
+    # def downAllProcess_2(self) :
+    #     self.showStatusMsg("")
+    #     for i in range(len(self.urlList)) :
+    #         self.downProcess(self.urlList[i])
+    
     # @check
     def addDownBar(self, filename) :
         item = QListWidgetItem(self.listWidget)
