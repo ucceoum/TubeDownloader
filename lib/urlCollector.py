@@ -4,11 +4,9 @@ import time
 
 class UrlCollector(QThread) :
     sig = pyqtSignal()
-
     def __init__(self, parent) :
         QThread.__init__(self)
         self.main = parent
-
     def urlCollect(self) :
         tmp_streamIndex = self.main.comboBox.currentIndex()
         self.url = self.main.urlEdit.text().strip()
@@ -18,10 +16,10 @@ class UrlCollector(QThread) :
         self.main.streamIndexList += tmp_streamIndexList
         self.main.total += len(plist)
         self.main.sig_title.emit()
-
     def run(self) :
         self.urlCollect()
-        while len(self.main.urlList) > self.main.urlCheck :
+        # while len(self.main.urlList) > self.main.urlCheck :
+        while True :
             if self.main.counter > 0 :
                 self.main.counter -= 1
                 self.sig.emit()

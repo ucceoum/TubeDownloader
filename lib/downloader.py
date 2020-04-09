@@ -81,6 +81,8 @@ class Downloader(QThread) :
                 self.err_msg = "차단된 영상이거나 Live 영상입니다."
             elif type(e) == error.URLError :
                 self.err_msg = "URL로딩 오류, 재시작 : 더블클릭"
+            elif type(e) == error.HTTPError :
+                self.err_msg = "연령제한이 있는 영상입니다."
             else :
                 self.err_msg = "로딩 오류, 재시작 : 더블클릭"
         if self.err_msg != "" :
@@ -89,7 +91,6 @@ class Downloader(QThread) :
             self.failed = True
             self.counterBack()
             return
-
         try :
             if self.go :
                 self.tubeC.download(self.dir, self.filename[0:(len(self.filename)-4)], skip_existing=False)
@@ -104,15 +105,12 @@ class Downloader(QThread) :
             if os.path.exists(self.dir+"/"+self.filename) :
                 os.remove(r'{}'.format((self.dir+"/"+self.filename)))
             return
-
-        #***
         if os.path.exists(self.dir+"/"+self.filename) or os.path.exists(self.dir+"/"+self.filename[0:(len(self.filename)-4)]+".mp3") :
             self.progressed = 100
             self.failed = False
             self.err_msg = ""
             self.sig2.emit()
         self.counterBack()
-
         if not self.go :
             print("self.go = False, return")
             if self.streamIndex == 2 :
